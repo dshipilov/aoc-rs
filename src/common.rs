@@ -83,7 +83,7 @@ impl AocDate {
         let mut input = String::new();
 
         if input_path.exists() {
-            info!("Reading day {} input from file {}", self, input_path.to_string_lossy());
+            info!("Reading input from {}", input_path.to_string_lossy());
             let f = File::open(input_path).context("Cannot open input data file")?;
             let mut reader = BufReader::new(f);
 
