@@ -6,6 +6,7 @@ use reqwest::blocking::Client;
 use reqwest::header::COOKIE;
 use reqwest::StatusCode;
 use std::fmt;
+use std::cmp::{ min, max, PartialOrd, Ordering };
 use std::fs::File;
 use std::io::prelude::*;
 use std::io::{BufReader, Read};
@@ -20,8 +21,7 @@ pub struct AocDate {
 }
 
 pub struct Day<const Y: u32, const D: u32> {
-    date: AocDate,
-    input: Option<String>,
+    pub date: AocDate,
 }
 
 impl fmt::Display for AocDate {
@@ -30,11 +30,33 @@ impl fmt::Display for AocDate {
     }
 }
 
+impl PartialOrd<AocDate> for AocDate {
+    fn partial_cmp(&self, other: &AocDate) -> Option<Ordering> {
+        if self == other {
+            Some(Ordering::Equal)
+        } else if self.year == other.year {
+            if self.day < other.day {
+                Some(Ordering::Less)
+            } else {
+                Some(Ordering::Greater)
+            }
+        } else if self.year < other.year {
+            Some(Ordering::Less)
+        } else {
+            Some(Ordering::Greater)
+        }
+    }
+}
+
 impl AocDate {
     pub fn today() -> AocDate {
         let dt = Local::now();
 
         AocDate { year: dt.year() as u32, day: dt.day() as u32 }
+    }
+
+    pub fn day(day: i32) -> AocDate {
+        AocDate { year: Local::now().year() as u32, day: min(max(1, day), 25) as u32 }     
     }
 
     fn url(&self) -> String {
@@ -105,38 +127,32 @@ impl AocDate {
 }
 
 pub trait Solution {
-    fn part1(&mut self) -> Result<String>;
-    fn part2(&mut self) -> Result<String>;
+    type Output: fmt::Display;
+
+    fn part1(&self, input: &str) -> Result<Self::Output>;
+    fn part2(&self, input: &str) -> Result<Self::Output>;
 }
 
 pub trait Solvable {
-    fn solve(&mut self) -> (Option<String>, Option<String>);
+    fn get_date(&self) -> AocDate;
+    fn solve(&self);
 }
 
 impl<const Y: u32, const D: u32> Solvable for Day<Y, D> where Day<Y,D>: Solution {
-    fn solve(&mut self) -> (Option<String>, Option<String>) {
-        if self.input.is_none() {
-            match self.date.load_data() {
-                Ok(input) =>
-                    self.input = Some(input),
-                Err(error) =>
-                    panic!("Unable to load input data: {}", error)
-            }
-        }
+    fn get_date(&self) -> AocDate {
+        self.date
+    }
+    
+    fn solve(&self) {
+        let input = self.date.load_data().unwrap_or_else(|e| panic!("Unable to load input data: {}", e));
 
-        match self.part1() {
-            Err(error) => {
-                error!("Error solving part 1: {}", error);
-                (None, None)
-            },
+        match self.part1(&input) {
+            Err(error) => error!("Error solving {} part 1: {}", self.date, error),
             Ok(result1) => {
-                match self.part2() {
-                    Err(error) => {
-                        error!("Error solving part 2: {}", error);
-                        (Some(result1), None)
-                    },
-                    Ok(result2) =>
-                        (Some(result1), Some(result2))
+                info!("{} part 1: {}", self.date, result1);
+                match self.part2(&input) {
+                    Err(error) => error!("Error solving {} part 2: {}", self.date, error),
+                    Ok(result2) => info!("{} part 2: {}", self.date, result2),
                 }
             }
         }
@@ -145,7 +161,7 @@ impl<const Y: u32, const D: u32> Solvable for Day<Y, D> where Day<Y,D>: Solution
 
 impl<const Y: u32, const D: u32> Default for Day<Y, D> {
     fn default() -> Self {
-        Day { date: AocDate { year: Y, day: D }, input: None }
+        Day { date: AocDate { year: Y, day: D } }
     }
 }
 

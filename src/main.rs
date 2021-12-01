@@ -1,13 +1,14 @@
+extern crate lazy_static;
 extern crate log;
-
-use log::{ LevelFilter, info };
-use common::AocDate;
 
 mod common;
 mod logging;
 mod solutions;
 
-const YEAR: u32 = 2020;
+use std::borrow::BorrowMut;
+
+use log::{ LevelFilter, info };
+use common::AocDate;
 
 fn main() {
     logging::setup(LevelFilter::Debug);
@@ -18,25 +19,15 @@ fn main() {
     if args.len() > 1 {
         let day = args[1].parse::<usize>().unwrap();
 
-        info!("Solving day {}", day);
+        info!("Solving {}", day);
         
         let solution = all_solutions[day - 1].as_mut();
-        let (p1, p2) = solution.solve();
-
-        if let Some(result) = p1 {
-            info!("Part 1 solution: {}", result);
-        } else {
-            info!("No soluton for part 1");
-        }
-
-        if let Some(result) = p2 {
-            info!("Part 2 solution: {}", result);
-        } else {
-            info!("No soluton for part 2");
-        }
+        solution.solve();
     } else {
-        let _day = AocDate::today();
+        let day = AocDate::today();
 
+        let solution = solutions::find(&day).unwrap().borrow_mut().solve();
+        //solution.solve();
         //let mut solution = solutions::find_by_date(day);
     }
 }
