@@ -1,26 +1,18 @@
-mod day21_1;
-mod day21_2;
+mod aoc_21;
 
+use crate::solutions::aoc_21::AOC21_SOLUTIONS;
 
-pub use day21_1::*;
-pub use day21_2::*;
+use crate::common::{ Solvable, AocDate };
 
-use std::default::Default;
-use crate::common::*;
-
-use lazy_static::lazy_static;
 type ThreadSafeSolvable = dyn Solvable + Send + Sync;
 
-lazy_static! {
-    static ref ALL_SOLUTIONS: Vec<Box<ThreadSafeSolvable>> = {
-        vec![
-            Box::new(Day21_1::default()),
-            Box::new(Day21_2::default()),
-         ]
-    };
+fn merge_all() -> Vec<Box<ThreadSafeSolvable>> {
+    let mut v: Vec<Box<ThreadSafeSolvable>> = Vec::new();
+    v.extend(AOC21_SOLUTIONS.as_ref().iter());
+    v
 }
 
 pub fn find(date: &AocDate) -> Option<&Box<ThreadSafeSolvable>> {
-    ALL_SOLUTIONS.iter().find(|&e| e.get_date() == *date)
+    merge_all().iter().find(|&e| e.get_date() == *date)
 }
 
