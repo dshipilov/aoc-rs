@@ -9,6 +9,10 @@ fn str_to_ints_vec(str: &str) -> Vec<i32> {
     .collect()
 }
 
+fn count_increasing(data: &[i32]) -> usize {
+    data.iter().zip(data.iter().skip(1)).filter(|(a,b)| a < b).count()
+}
+
 #[cfg(test)]
 mod tests {
     use crate::solutions::day21_1::*;
@@ -25,7 +29,7 @@ mod tests {
     pub fn test_day21_1_p1_solution() {
         let data: Vec<i32> = vec![199, 200, 208, 210, 200, 207, 240, 269, 260, 263];
 
-        let count = data.iter().zip(data.iter().skip(1)).filter(|(a,b)| a < b).count();
+        let count = count_increasing(&data);
         assert_eq!(count, 7);
     }
 
@@ -36,20 +40,18 @@ mod tests {
         let data_by_3_sum: Vec<i32> = data.windows(3).map(|w| w.iter().sum()).collect();
         assert_eq!(data_by_3_sum, vec![607, 618, 618, 617, 647, 716, 769, 792]);
 
-        let count = data_by_3_sum.iter().zip(data_by_3_sum.iter().skip(1)).filter(|(a,b)| a < b).count();
+        let count = count_increasing(&data_by_3_sum);
         assert_eq!(count, 5);
     }
 }
 
 impl Solution for Day21_1 {
-    type Output = i32;
+    type Output = usize;
 
     fn part1(&self, input: &str) -> Result<Self::Output> {
         let data: Vec<i32> = str_to_ints_vec(input);
 
-        let count = data.iter().zip(data.iter().skip(1)).filter(|(a,b)| a < b).count();
- 
-        Ok(count as i32)
+        Ok(count_increasing(&data))
     }
 
     fn part2(&self, input: &str) -> Result<Self::Output> {
@@ -59,8 +61,6 @@ impl Solution for Day21_1 {
             .map(|w| w.iter().sum())
             .collect();
 
-        let count = data.iter().zip(data.iter().skip(1)).filter(|(a,b)| a < b).count();
-  
-        Ok(count as i32)
+        Ok(count_increasing(&data))
     }
 }
