@@ -1,8 +1,8 @@
 use anyhow::{ Result, anyhow };
 use crate::common::{ Solution, Day };
-use log::{ info, error };
+use super::YEAR;
 
-pub type Day1 = Day<2020, 1>;
+pub type TheDay = Day<YEAR, 1>;
 
 const SUM: u32 = 2020;
 
@@ -14,7 +14,7 @@ fn str_to_ints_vec(str: &str) -> Vec<i32> {
 
 #[cfg(test)]
 mod tests {
-    use crate::solutions::day20_1::*;
+    use super::*;
 
     #[test]
     pub fn test_parse_int_lines() {
@@ -24,16 +24,16 @@ mod tests {
     }
 }
 
-impl Solution for Day<2020, 1> {
+impl Solution for TheDay {
     type Output = i32;
 
-    fn part1(&mut self, input: &str) -> Result<Self::Output> {
+    fn part1(&self, input: &str) -> Result<Self::Output> {
         let data = str_to_ints_vec(input);    
 
         Err(anyhow!("Not implemented"))
     }
 
-    fn part2(&mut self) -> Result<Self::Output> {
+    fn part2(&self, input: &str) -> Result<Self::Output> {
         Err(anyhow!("Not implemented"))
     }
 }

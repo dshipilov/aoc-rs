@@ -13,7 +13,12 @@ fn main() {
 
     let args: Vec<String> = std::env::args().collect();
 
-    let date = if args.len() > 1 {
+    let date = if args.len() > 2 {
+        let year = args[1].parse::<u32>().unwrap();
+        let day = args[2].parse::<u32>().unwrap();
+
+        AocDate { year, day } 
+    } else if args.len() > 1 {
         let day = args[1].parse::<i32>().unwrap();
         AocDate::day(day)
     } else {
