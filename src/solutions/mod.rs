@@ -1,18 +1,20 @@
-mod aoc_21;
-
-use crate::solutions::aoc_21::AOC21_SOLUTIONS;
-
 use crate::common::{ Solvable, AocDate };
+use lazy_static::lazy_static;
+use std::collections::HashMap;
+
+mod aoc_21;
 
 type ThreadSafeSolvable = dyn Solvable + Send + Sync;
 
-fn merge_all() -> Vec<Box<ThreadSafeSolvable>> {
-    let mut v: Vec<Box<ThreadSafeSolvable>> = Vec::new();
-    v.extend(AOC21_SOLUTIONS.as_ref().iter());
-    v
+lazy_static! {
+    static ref ALL_SOLUTIONS: HashMap<u32, &'static Vec<Box<ThreadSafeSolvable>>> = {
+        let mut m = HashMap::new();
+        m.insert(aoc_21::YEAR, aoc_21::SOLUTIONS.as_ref());
+        m
+    };
 }
 
 pub fn find(date: &AocDate) -> Option<&Box<ThreadSafeSolvable>> {
-    merge_all().iter().find(|&e| e.get_date() == *date)
+    ALL_SOLUTIONS.get(&date.year).map(|&v| v.iter().find(|&e| e.get_date() == *date)).unwrap()
 }
 

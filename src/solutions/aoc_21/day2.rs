@@ -2,8 +2,9 @@ use anyhow::Result;
 use crate::common::{ Solution, Day };
 use regex::Regex;
 use lazy_static::lazy_static;
+use super::YEAR;
 
-pub type Day21_2 = Day<2021, 2>;
+pub type TheDay = Day<YEAR, 2>;
 
 #[derive(Debug, PartialEq, Eq)]
 enum Command {
@@ -38,7 +39,7 @@ fn parse_input(input: &str) -> Vec<Command> {
 
 #[cfg(test)]
 mod tests {
-    use crate::solutions::day21_2::*;
+    use super::*;
 
     #[test]
     pub fn test_command_parsing() {
@@ -48,7 +49,7 @@ mod tests {
     }
 }
 
-impl Solution for Day21_2 {
+impl Solution for TheDay {
     type Output = i32;
 
     fn part1(&self, input: &str) -> Result<Self::Output> {

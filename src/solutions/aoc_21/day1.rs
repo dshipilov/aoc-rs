@@ -1,7 +1,8 @@
 use anyhow::Result;
 use crate::common::{ Solution, Day };
+use super::YEAR;
 
-pub type Day21_1 = Day<2021, 1>;
+pub type TheDay = Day<YEAR, 1>;
 
 fn str_to_ints_vec(str: &str) -> Vec<i32> {
     str.lines().into_iter()
@@ -15,7 +16,7 @@ fn count_increasing(data: &[i32]) -> usize {
 
 #[cfg(test)]
 mod tests {
-    use crate::solutions::day21_1::*;
+    use super::*;
 
     #[test]
     pub fn test_parse_int_lines() {
@@ -45,7 +46,7 @@ mod tests {
     }
 }
 
-impl Solution for Day21_1 {
+impl Solution for TheDay {
     type Output = usize;
 
     fn part1(&self, input: &str) -> Result<Self::Output> {

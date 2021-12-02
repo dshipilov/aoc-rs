@@ -16,8 +16,8 @@ use chrono::prelude::*;
 
 #[derive(Copy, Clone, PartialEq, Eq)]
 pub struct AocDate {
-    year: u32,
-    day: u32,
+    pub year: u32,
+    pub day: u32,
 }
 
 pub struct Day<const Y: u32, const D: u32> {
