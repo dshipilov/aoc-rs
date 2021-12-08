@@ -5,6 +5,7 @@ mod day4;
 mod day5;
 mod day6;
 mod day7;
+mod day8;
 
 pub const YEAR: u32 = 2021;
 
@@ -23,6 +24,7 @@ lazy_static! {
             Box::new(day5::TheDay::default()),
             Box::new(day6::TheDay::default()),
             Box::new(day7::TheDay::default()),
+            Box::new(day8::TheDay::default()),
          ]
     };
 }
